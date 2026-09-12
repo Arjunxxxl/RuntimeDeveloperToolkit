@@ -40,7 +40,7 @@ namespace RuntimeDeveloperToolkit.Core
         /// Get the Update Scheduler
         /// </summary>
         public RuntimeUpdateScheduler Scheduler { get; private set; }
-
+        
         /// <summary>
         /// Initializes the toolkit runtime.
         /// </summary>

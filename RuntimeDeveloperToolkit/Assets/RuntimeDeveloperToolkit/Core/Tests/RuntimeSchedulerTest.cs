@@ -46,18 +46,18 @@ public sealed class RuntimeSchedulerTest : MonoBehaviour
     {
         _tenHzTimer += context.UnscaledDeltaTime;
 
-        Debug.Log(
+        /*Debug.Log(
             $"[Scheduler] 10Hz callback. " +
-            $"Elapsed: {_tenHzTimer:F2}s");
+            $"Elapsed: {_tenHzTimer:F2}s");*/
     }
 
     private void OnOneHz(RuntimeUpdateContext context)
     {
         _oneHzTimer += context.UnscaledDeltaTime;
 
-        Debug.Log(
+        /*Debug.Log(
             $"[Scheduler] 1Hz callback. " +
-            $"Elapsed: {_oneHzTimer:F2}s");
+            $"Elapsed: {_oneHzTimer:F2}s");*/
     }
 
     private void OnDestroy()
