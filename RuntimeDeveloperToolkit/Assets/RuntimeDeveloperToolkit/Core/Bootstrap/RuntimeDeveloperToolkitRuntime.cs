@@ -1,4 +1,5 @@
 using UnityEngine;
+using RuntimeDeveloperToolkit.Core.Modules;
 
 namespace RuntimeDeveloperToolkit.Core
 {
@@ -28,6 +29,11 @@ namespace RuntimeDeveloperToolkit.Core
         /// Gets whether the toolkit is currently shutting down.
         /// </summary>
         public bool IsShuttingDown => _isShuttingDown;
+        
+        /// <summary>
+        /// Gets the module registry.
+        /// </summary>
+        public RuntimeModuleRegistry Modules { get; private set; }
 
         /// <summary>
         /// Initializes the toolkit runtime.
@@ -44,7 +50,9 @@ namespace RuntimeDeveloperToolkit.Core
                 return;
             }
 
-            _isInitialized = true;
+            Modules = new RuntimeModuleRegistry();
+            
+            _isInitialized = true; 
         }
 
         /// <summary>
@@ -62,6 +70,10 @@ namespace RuntimeDeveloperToolkit.Core
                 return;
             }
 
+            Modules?.DisableAll();
+            Modules?.DisposeAll();
+            Modules = null;
+            
             _isShuttingDown = true;
             _isInitialized = false;
         }
@@ -84,6 +96,8 @@ namespace RuntimeDeveloperToolkit.Core
                 return;
             }
 
+            Shutdown();
+            
             Instance = null;
             _isInitialized = false;
             _isShuttingDown = false;
