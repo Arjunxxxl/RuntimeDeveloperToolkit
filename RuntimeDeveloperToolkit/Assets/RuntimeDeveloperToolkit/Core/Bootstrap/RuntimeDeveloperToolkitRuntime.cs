@@ -1,5 +1,6 @@
 using UnityEngine;
 using RuntimeDeveloperToolkit.Core.Modules;
+using RuntimeDeveloperToolkit.Core.Scheduling;
 
 namespace RuntimeDeveloperToolkit.Core
 {
@@ -34,6 +35,11 @@ namespace RuntimeDeveloperToolkit.Core
         /// Gets the module registry.
         /// </summary>
         public RuntimeModuleRegistry Modules { get; private set; }
+        
+        /// <summary>
+        /// Get the Update Scheduler
+        /// </summary>
+        public RuntimeUpdateScheduler Scheduler { get; private set; }
 
         /// <summary>
         /// Initializes the toolkit runtime.
@@ -51,6 +57,7 @@ namespace RuntimeDeveloperToolkit.Core
             }
 
             Modules = new RuntimeModuleRegistry();
+            Scheduler = new RuntimeUpdateScheduler();
             
             _isInitialized = true; 
         }
@@ -74,6 +81,8 @@ namespace RuntimeDeveloperToolkit.Core
             Modules?.DisposeAll();
             Modules = null;
             
+            Scheduler?.Clear();
+            
             _isShuttingDown = true;
             _isInitialized = false;
         }
@@ -87,6 +96,20 @@ namespace RuntimeDeveloperToolkit.Core
             }
 
             Instance = this;
+        }
+        
+        private void Update()
+        {
+            if (!_isInitialized || _isShuttingDown)
+            {
+                return;
+            }
+
+            Scheduler.Update(
+                Time.deltaTime,
+                Time.unscaledDeltaTime,
+                Time.time,
+                Time.unscaledTime);
         }
 
         private void OnDestroy()
