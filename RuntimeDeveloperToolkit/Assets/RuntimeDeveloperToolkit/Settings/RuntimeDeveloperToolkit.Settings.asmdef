@@ -1,0 +1,16 @@
+{
+  "name": "RuntimeDeveloperToolkit.Settings",
+  "rootNamespace": "RuntimeDeveloperToolkit.Settings",
+  "references": [
+    "RuntimeDeveloperToolkit.Core"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
