@@ -1,6 +1,7 @@
 using UnityEngine;
 using RuntimeDeveloperToolkit.Core.Modules;
 using RuntimeDeveloperToolkit.Core.Scheduling;
+using RuntimeDeveloperToolkit.Core.Services;
 
 namespace RuntimeDeveloperToolkit.Core
 {
@@ -42,6 +43,11 @@ namespace RuntimeDeveloperToolkit.Core
         public RuntimeUpdateScheduler Scheduler { get; private set; }
         
         /// <summary>
+        /// Gets the runtime service registry.
+        /// </summary>
+        public RuntimeServiceRegistry Services { get; private set; }
+        
+        /// <summary>
         /// Initializes the toolkit runtime.
         /// </summary>
         internal void Initialize()
@@ -58,6 +64,7 @@ namespace RuntimeDeveloperToolkit.Core
 
             Modules = new RuntimeModuleRegistry();
             Scheduler = new RuntimeUpdateScheduler();
+            Services = new RuntimeServiceRegistry();
             
             _isInitialized = true; 
         }
@@ -77,11 +84,16 @@ namespace RuntimeDeveloperToolkit.Core
                 return;
             }
 
+            Services?.ShutdownAll();
+            Services?.Clear();
+            Services = null;
+            
             Modules?.DisableAll();
             Modules?.DisposeAll();
             Modules = null;
             
             Scheduler?.Clear();
+            Scheduler = null; 
             
             _isShuttingDown = true;
             _isInitialized = false;
