@@ -427,6 +427,15 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             {
                 Debug.Log("Slider value: " + value);
             });
+            
+            RuntimeUIValueDisplay testValue =
+                new RuntimeUIValueDisplay(_contentRoot);
+
+            testValue.Label = "FPS";
+            testValue.Value = "60";
+
+            testValue.SetSize(new Vector2(300f, 40f));
+            testValue.SetPosition(new Vector2(0f, -240f));
         }
     }
 }
