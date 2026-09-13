@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using RuntimeDeveloperToolkit.UI.Themes;
 
 namespace RuntimeDeveloperToolkit.UI.Controls
 {
@@ -113,6 +114,18 @@ namespace RuntimeDeveloperToolkit.UI.Controls
             _valueText.color = Color.white;
             _valueText.alignment =
                 TextAnchor.MiddleRight;
+        }
+        
+        public void ApplyTheme(RuntimeUIThemeData theme)
+        {
+            if (theme == null)
+                return;
+
+            _labelText.color = theme.SecondaryTextColor;
+            _labelText.fontSize = theme.BodyFontSize;
+
+            _valueText.color = theme.TextColor;
+            _valueText.fontSize = theme.BodyFontSize;
         }
 
         public void SetValue(string value)

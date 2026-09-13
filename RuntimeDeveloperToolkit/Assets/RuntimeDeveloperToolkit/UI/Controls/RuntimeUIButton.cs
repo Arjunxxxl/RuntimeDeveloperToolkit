@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using RuntimeDeveloperToolkit.UI.Themes;
 
 namespace RuntimeDeveloperToolkit.UI.Controls
 {
@@ -75,6 +76,20 @@ namespace RuntimeDeveloperToolkit.UI.Controls
             _label.fontSize = 14;
             _label.color = Color.white;
             _label.alignment = TextAnchor.MiddleCenter;
+        }
+        
+        public void ApplyTheme(RuntimeUIThemeData theme)
+        {
+            if (theme == null)
+                return; 
+
+            Image background = _button.targetGraphic as Image;
+
+            if (background != null)
+                background.color = theme.PrimaryColor;
+
+            _label.color = theme.TextColor;
+            _label.fontSize = theme.BodyFontSize;
         }
 
         public void SetText(string text)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RuntimeDeveloperToolkit.UI.Themes;
 using UnityEngine;
 
 namespace RuntimeDeveloperToolkit.UI.Windows
@@ -16,6 +17,20 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         public void Initialize(Transform parent)
         {
             _parent = parent;
+        }
+        
+        public void ApplyTheme(RuntimeUIThemeData theme)
+        {
+            if (theme == null)
+                return;
+
+            foreach (IRuntimeWindow window in _windows.Values)
+            {
+                if (window is RuntimeWindow runtimeWindow)
+                {
+                    runtimeWindow.ApplyTheme(theme);
+                }
+            }
         }
 
         public bool Register(IRuntimeWindow window)
@@ -43,7 +58,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             }
 
             window.Initialize(_parent);
-
+            
             _windows.Add(window.Id, window);
 
             return true;

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using RuntimeDeveloperToolkit.UI.Controls;
+using RuntimeDeveloperToolkit.UI.Themes;
 
 namespace RuntimeDeveloperToolkit.UI.Windows
 {
@@ -8,9 +8,12 @@ namespace RuntimeDeveloperToolkit.UI.Windows
     {
         private GameObject _rootObject;
         private RectTransform _root;
+        
+        private Image _background;
 
         private GameObject _titleBarObject;
         private RectTransform _titleBar;
+        private Image _titleBarImage;
 
         private GameObject _contentObject;
         private RectTransform _contentRoot;
@@ -140,6 +143,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
 
         protected virtual void OnInitialize()
         {
+            
         }
 
         protected virtual void OnShow()
@@ -166,10 +170,10 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             _root =
                 _rootObject.AddComponent<RectTransform>();
 
-            Image background =
+            _background =
                 _rootObject.AddComponent<Image>();
 
-            background.color =
+            _background.color =
                 new Color(
                     0.08f,
                     0.08f,
@@ -204,10 +208,10 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             _titleBar =
                 _titleBarObject.AddComponent<RectTransform>();
 
-            Image background =
+            _titleBarImage =
                 _titleBarObject.AddComponent<Image>();
 
-            background.color =
+            _titleBarImage.color =
                 new Color(
                     0.12f,
                     0.12f,
@@ -382,6 +386,47 @@ namespace RuntimeDeveloperToolkit.UI.Windows
                 new Vector2(
                     -10f,
                     -46f);
+        }
+        
+        public void ApplyTheme(RuntimeUIThemeData theme)
+        {
+            if (theme == null)
+                return;
+
+            if (_background != null)
+            {
+                _background.color = theme.BackgroundColor;
+            }
+
+            if (_titleBarImage != null)
+            {
+                _titleBarImage.color = theme.TitleBarColor;
+            }
+
+            if (_titleText != null)
+            {
+                _titleText.color = theme.TextColor;
+                _titleText.fontSize = theme.TitleFontSize;
+            }
+            
+            if (_closeButton != null)
+            {
+                Image closeButtonImage =
+                    _closeButton.targetGraphic as Image;
+
+                if (closeButtonImage != null)
+                {
+                    closeButtonImage.color = theme.SecondaryColor;
+                }
+
+                Text closeButtonText =
+                    _closeButton.GetComponentInChildren<Text>();
+
+                if (closeButtonText != null)
+                {
+                    closeButtonText.color = theme.TextColor;
+                }
+            }
         }
     }
 }

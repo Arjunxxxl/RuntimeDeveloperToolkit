@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using RuntimeDeveloperToolkit.UI.Themes;
 
 namespace RuntimeDeveloperToolkit.UI.Controls
 {
@@ -24,7 +25,7 @@ namespace RuntimeDeveloperToolkit.UI.Controls
             set => _gameObject.SetActive(value);
         }
 
-        public RuntimeUILabel(Transform parent)
+        public RuntimeUILabel(Transform parent) 
         {
             _gameObject = new GameObject("Label");
 
@@ -39,6 +40,15 @@ namespace RuntimeDeveloperToolkit.UI.Controls
             _text.alignment = TextAnchor.MiddleLeft;
             _text.horizontalOverflow = HorizontalWrapMode.Wrap;
             _text.verticalOverflow = VerticalWrapMode.Truncate;
+        }
+        
+        public void ApplyTheme(RuntimeUIThemeData theme)
+        {
+            if (theme == null)
+                return;
+
+            _text.color = theme.TextColor;
+            _text.fontSize = theme.BodyFontSize;
         }
 
         public void SetFontSize(int size)

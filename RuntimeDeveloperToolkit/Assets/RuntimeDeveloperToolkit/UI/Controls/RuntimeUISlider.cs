@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using RuntimeDeveloperToolkit.UI.Themes;
 
 namespace RuntimeDeveloperToolkit.UI.Controls
 {
@@ -138,6 +139,37 @@ namespace RuntimeDeveloperToolkit.UI.Controls
             _slider.minValue = 0f;
             _slider.maxValue = 1f;
             _slider.value = 0.5f;
+        }
+        
+        public void ApplyTheme(RuntimeUIThemeData theme)
+        {
+            if (theme == null)
+                return;
+
+            if (_slider.targetGraphic is Image handle)
+            {
+                handle.color = theme.TextColor;
+            }
+
+            if (_slider.fillRect != null)
+            {
+                Image fill = _slider.fillRect.GetComponent<Image>();
+
+                if (fill != null)
+                    fill.color = theme.PrimaryColor;
+            }
+
+            Transform backgroundTransform =
+                _slider.transform.Find("Background");
+
+            if (backgroundTransform != null)
+            {
+                Image background =
+                    backgroundTransform.GetComponent<Image>();
+
+                if (background != null)
+                    background.color = theme.SecondaryColor;
+            }
         }
 
         public void SetValue(float value)

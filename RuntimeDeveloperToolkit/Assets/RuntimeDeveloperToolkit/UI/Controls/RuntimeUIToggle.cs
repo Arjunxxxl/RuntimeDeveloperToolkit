@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using RuntimeDeveloperToolkit.UI.Themes;
 
 namespace RuntimeDeveloperToolkit.UI.Controls
 {
@@ -136,6 +137,25 @@ namespace RuntimeDeveloperToolkit.UI.Controls
             _label.color = Color.white;
             _label.alignment = TextAnchor.MiddleLeft;
         }
+        
+        public void ApplyTheme(RuntimeUIThemeData theme)
+        {
+            if (theme == null)
+                return;
+
+            _label.color = theme.TextColor;
+            _label.fontSize = theme.BodyFontSize;
+
+            if (_toggle.targetGraphic is Image background)
+            {
+                background.color = theme.SecondaryColor;
+            }
+
+            if (_toggle.graphic is Image checkmark)
+            {
+                checkmark.color = theme.PrimaryColor;
+            }
+        } 
 
         public void SetValue(bool value)
         {

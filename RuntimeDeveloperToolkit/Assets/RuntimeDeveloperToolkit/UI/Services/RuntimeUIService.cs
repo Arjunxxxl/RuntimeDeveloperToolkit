@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using RuntimeDeveloperToolkit.UI.Windows;
+using RuntimeDeveloperToolkit.UI.Themes;
 
 namespace RuntimeDeveloperToolkit.UI.Services
 {
@@ -14,6 +15,8 @@ namespace RuntimeDeveloperToolkit.UI.Services
         private GameObject _eventSystemObject;
         
         public RuntimeWindowManager Windows { get; private set; }
+        
+        private RuntimeUITheme _theme;
 
         public string Id => "ui";
 
@@ -22,6 +25,8 @@ namespace RuntimeDeveloperToolkit.UI.Services
             _canvas != null;
 
         public Canvas Canvas => _canvas;
+        
+        public RuntimeUITheme Theme => _theme;
 
         public void Initialize()
         {
@@ -37,6 +42,9 @@ namespace RuntimeDeveloperToolkit.UI.Services
             Windows = new RuntimeWindowManager();
 
             Windows.Initialize(_canvas.transform);
+            
+            _theme = new RuntimeUITheme();
+            _theme.ThemeChanged += OnThemeChanged;
         }
 
         public void Shutdown()
@@ -51,6 +59,12 @@ namespace RuntimeDeveloperToolkit.UI.Services
             if (_eventSystemObject != null)
             {
                 Object.Destroy(_eventSystemObject);
+            }
+            
+            if (_theme != null)
+            {
+                _theme.ThemeChanged -= OnThemeChanged;
+                _theme = null;
             }
 
             Windows = null;
@@ -119,6 +133,17 @@ namespace RuntimeDeveloperToolkit.UI.Services
             _eventSystemObject.AddComponent<EventSystem>();
 
             _eventSystemObject.AddComponent<InputSystemUIInputModule>();
+        }
+        
+        private void OnThemeChanged(RuntimeUIThemeData theme)
+        {
+            if (theme == null)
+                return;
+
+            if (Windows == null)
+                return;
+
+            Windows.ApplyTheme(theme);
         }
     }
 }
