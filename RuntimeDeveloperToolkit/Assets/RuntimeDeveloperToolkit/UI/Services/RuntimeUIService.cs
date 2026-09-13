@@ -1,6 +1,8 @@
 using RuntimeDeveloperToolkit.Core.Services;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using RuntimeDeveloperToolkit.UI.Windows;
 
 namespace RuntimeDeveloperToolkit.UI.Services
@@ -9,6 +11,7 @@ namespace RuntimeDeveloperToolkit.UI.Services
     {
         private GameObject _rootObject;
         private Canvas _canvas;
+        private GameObject _eventSystemObject;
         
         public RuntimeWindowManager Windows { get; private set; }
 
@@ -29,6 +32,7 @@ namespace RuntimeDeveloperToolkit.UI.Services
 
             CreateRoot();
             CreateCanvas();
+            CreateEventSystem();
             
             Windows = new RuntimeWindowManager();
 
@@ -44,9 +48,15 @@ namespace RuntimeDeveloperToolkit.UI.Services
                 Object.Destroy(_rootObject);
             }
 
+            if (_eventSystemObject != null)
+            {
+                Object.Destroy(_eventSystemObject);
+            }
+
             Windows = null;
             _rootObject = null;
             _canvas = null;
+            _eventSystemObject = null;
         }
 
         private void CreateRoot()
@@ -87,6 +97,28 @@ namespace RuntimeDeveloperToolkit.UI.Services
             scaler.matchWidthOrHeight = 0.5f;
 
             canvasObject.AddComponent<GraphicRaycaster>();
+        }
+        
+        private void CreateEventSystem()
+        {
+            EventSystem existingEventSystem =
+                Object.FindFirstObjectByType<EventSystem>();
+
+            if (existingEventSystem != null)
+            {
+                return;
+            }
+
+            _eventSystemObject =
+                new GameObject(
+                    "[Runtime Developer Toolkit EventSystem]");
+
+            Object.DontDestroyOnLoad(
+                _eventSystemObject);
+
+            _eventSystemObject.AddComponent<EventSystem>();
+
+            _eventSystemObject.AddComponent<InputSystemUIInputModule>();
         }
     }
 }

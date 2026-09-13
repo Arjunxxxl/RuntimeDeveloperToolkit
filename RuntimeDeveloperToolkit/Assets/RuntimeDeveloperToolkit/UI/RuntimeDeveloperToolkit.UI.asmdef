@@ -3,7 +3,8 @@
   "rootNamespace": "RuntimeDeveloperToolkit.UI",
   "references": [
     "RuntimeDeveloperToolkit.Core",
-    "RuntimeDeveloperToolkit.Settings"
+    "RuntimeDeveloperToolkit.Settings",
+    "Unity.InputSystem"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
