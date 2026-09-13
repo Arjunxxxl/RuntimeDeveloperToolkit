@@ -86,6 +86,25 @@ namespace RuntimeDeveloperToolkit
                     ? runtime.Services
                     : null;
             }
-        } 
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns> 
+        public static bool RegisterService(
+            IRuntimeService service)
+        {
+            RuntimeDeveloperToolkitRuntime runtime =
+                RuntimeDeveloperToolkitRuntime.Instance;
+
+            if (runtime == null)
+            {
+                return false;
+            }
+
+            return runtime.RegisterService(service);
+        }
     }
 }

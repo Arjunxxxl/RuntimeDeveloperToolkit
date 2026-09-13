@@ -82,7 +82,10 @@ namespace RuntimeDeveloperToolkit.Core.Services
         {
             foreach (IRuntimeService service in _services.Values)
             {
-                service.Initialize();
+                if (!service.IsInitialized)
+                {
+                    service.Initialize();
+                }
             }
         }
 
@@ -90,7 +93,10 @@ namespace RuntimeDeveloperToolkit.Core.Services
         {
             foreach (IRuntimeService service in _services.Values)
             {
-                service.Shutdown();
+                if (service.IsInitialized)
+                {
+                    service.Shutdown();
+                }
             }
         }
 
@@ -99,4 +105,4 @@ namespace RuntimeDeveloperToolkit.Core.Services
             _services.Clear();
         }
     }
-}  
+}

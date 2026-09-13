@@ -68,7 +68,7 @@ namespace RuntimeDeveloperToolkit.Core
             
             _isInitialized = true; 
         }
-
+        
         /// <summary>
         /// Shuts down the toolkit runtime.
         /// </summary>
@@ -99,6 +99,24 @@ namespace RuntimeDeveloperToolkit.Core
             _isInitialized = false;
         }
 
+        public bool RegisterService(
+            IRuntimeService service)
+        {
+            if (!_isInitialized || _isShuttingDown)
+            {
+                return false;
+            }
+
+            if (!Services.Register(service))
+            {
+                return false;
+            }
+
+            service.Initialize();
+
+            return true;
+        }
+        
         private void Awake()
         {
             if (Instance != null && Instance != this)

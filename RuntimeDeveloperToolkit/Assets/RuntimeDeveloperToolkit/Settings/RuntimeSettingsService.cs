@@ -1,36 +1,76 @@
-using System;
+using RuntimeDeveloperToolkit.Core.Services;
 
 namespace RuntimeDeveloperToolkit.Settings
 {
-    public sealed class RuntimeSettingsService
+    public sealed class RuntimeSettingsService : IRuntimeService
     {
-        private readonly RuntimeSettingsRegistry _registry;
+        private RuntimeSettingsRegistry _registry;
 
-        public RuntimeSettingsRegistry Registry => _registry;
+        public string Id => "settings";
 
-        public RuntimeSettingsService()
+        public bool IsInitialized =>
+            _registry != null;
+
+        public RuntimeSettingsRegistry Registry =>
+            _registry;
+
+        public void Initialize()
         {
+            if (IsInitialized)
+            {
+                return;
+            }
+
             _registry = new RuntimeSettingsRegistry();
+        }
+
+        public void Shutdown()
+        {
+            if (!IsInitialized)
+            {
+                return;
+            }
+
+            _registry.Clear();
+            _registry = null;
         }
 
         public bool RegisterGroup(
             string groupId,
             RuntimeSettings settings)
         {
+            if (!IsInitialized)
+            {
+                return false;
+            }
+
             return _registry.RegisterGroup(
                 groupId,
                 settings);
         }
 
-        public bool UnregisterGroup(string groupId)
+        public bool UnregisterGroup(
+            string groupId)
         {
-            return _registry.UnregisterGroup(groupId);
+            if (!IsInitialized)
+            {
+                return false;
+            }
+
+            return _registry.UnregisterGroup(
+                groupId);
         }
 
         public bool TryGetGroup(
             string groupId,
             out RuntimeSettings settings)
         {
+            if (!IsInitialized)
+            {
+                settings = null;
+                return false;
+            }
+
             return _registry.TryGetGroup(
                 groupId,
                 out settings);
@@ -38,12 +78,12 @@ namespace RuntimeDeveloperToolkit.Settings
 
         public void ResetAll()
         {
-            _registry.ResetAll();
-        }
+            if (!IsInitialized)
+            {
+                return;
+            }
 
-        public void Clear()
-        {
-            _registry.Clear();
+            _registry.ResetAll();
         }
     }
 }

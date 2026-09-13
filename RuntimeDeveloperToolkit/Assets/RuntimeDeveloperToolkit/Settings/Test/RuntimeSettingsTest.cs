@@ -73,7 +73,7 @@ public sealed class RuntimeSettingsTest : MonoBehaviour
         Debug.Log(
             $"After reset show graph: {showGraph.Value}");
 
-        service.Clear();
+        service = null;
 
         Debug.Log(
             $"Group count after clear: {service.Registry.Count}");
