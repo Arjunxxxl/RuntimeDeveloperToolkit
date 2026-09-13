@@ -1,6 +1,7 @@
 using RuntimeDeveloperToolkit.Core.Services;
 using UnityEngine;
 using UnityEngine.UI;
+using RuntimeDeveloperToolkit.UI.Windows;
 
 namespace RuntimeDeveloperToolkit.UI.Services
 {
@@ -8,6 +9,8 @@ namespace RuntimeDeveloperToolkit.UI.Services
     {
         private GameObject _rootObject;
         private Canvas _canvas;
+        
+        public RuntimeWindowManager Windows { get; private set; }
 
         public string Id => "ui";
 
@@ -26,15 +29,22 @@ namespace RuntimeDeveloperToolkit.UI.Services
 
             CreateRoot();
             CreateCanvas();
+            
+            Windows = new RuntimeWindowManager();
+
+            Windows.Initialize(_canvas.transform);
         }
 
         public void Shutdown()
         {
+            Windows?.DisposeAll();
+            
             if (_rootObject != null)
             {
                 Object.Destroy(_rootObject);
             }
 
+            Windows = null;
             _rootObject = null;
             _canvas = null;
         }
