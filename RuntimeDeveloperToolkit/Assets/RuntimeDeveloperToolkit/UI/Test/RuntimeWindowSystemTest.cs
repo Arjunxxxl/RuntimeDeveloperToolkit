@@ -115,6 +115,7 @@ public sealed class RuntimeWindowSystemTest : MonoBehaviour
     private void OnWindowShown(IRuntimeWindow window)
     {
         Debug.Log($"Window shown: {window.Id}");
+        Debug.Log(window.ContentRoot);
     }
     
     private void OnWindowHidden(IRuntimeWindow window)

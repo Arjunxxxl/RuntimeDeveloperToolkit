@@ -154,6 +154,19 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             IsFocused = false;
             Unfocused?.Invoke();
         }
+        
+        public void ClearContent()
+        {
+            if (_contentRoot == null)
+                return;
+
+            OnClearContent();
+            
+            for (int i = _contentRoot.childCount - 1; i >= 0; i--)
+            {
+                Object.Destroy(_contentRoot.GetChild(i).gameObject);
+            }
+        }
 
         public void SetPosition(Vector2 position)
         {
@@ -215,6 +228,11 @@ namespace RuntimeDeveloperToolkit.UI.Windows
 
         protected virtual void OnDispose()
         {
+        }
+        
+        protected virtual void OnClearContent()
+        {
+            Debug.Log("Content is being cleared.");
         }
 
         private void CreateRoot(Transform parent)

@@ -15,6 +15,8 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         bool IsInitialized { get; }
 
         RectTransform Root { get; }
+        
+        RectTransform ContentRoot { get; }
 
         void Initialize(Transform parent);
 
@@ -25,6 +27,8 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         void Focus();
         
         void Unfocus();
+        
+        void ClearContent();
 
         void SetPosition(Vector2 position);
 
