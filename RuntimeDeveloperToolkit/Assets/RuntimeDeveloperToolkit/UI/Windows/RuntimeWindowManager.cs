@@ -17,6 +17,11 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         public IRuntimeWindow FocusedWindow => _focusedWindow;
         public int Count => _windows.Count;
         
+        public event Action<IRuntimeWindow> WindowRegistered;
+        public event Action<IRuntimeWindow> WindowUnregistered;
+        public event Action<IRuntimeWindow> WindowShown;
+        public event Action<IRuntimeWindow> WindowHidden;
+        
         public IReadOnlyCollection<IRuntimeWindow> VisibleWindows
         {
             get
@@ -85,6 +90,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             }
             
             _windows.Add(window.Id, window);
+            WindowRegistered?.Invoke(window);
 
             return true;
         }
@@ -112,6 +118,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             window.Dispose();
 
             _windows.Remove(windowId);
+            WindowUnregistered?.Invoke(window);
 
             return true;
         }
@@ -133,6 +140,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             }
 
             window.Show();
+            WindowShown?.Invoke(window);
 
             return true;
         }
@@ -151,6 +159,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             }
 
             window.Hide();
+            WindowHidden?.Invoke(window);
 
             return true;
         }

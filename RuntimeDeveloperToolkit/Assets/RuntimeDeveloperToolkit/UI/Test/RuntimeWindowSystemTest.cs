@@ -5,6 +5,28 @@ using RuntimeDeveloperToolkit.UI.Windows;
 
 public sealed class RuntimeWindowSystemTest : MonoBehaviour
 {
+    private void OnEnable()
+    {
+        Toolkit.Services.TryGet<RuntimeUIService>(
+            "ui",
+            out RuntimeUIService uiService);
+        uiService.Windows.WindowRegistered += OnWindowRegistered;
+        uiService.Windows.WindowUnregistered += OnWindowUnregistered;
+        uiService.Windows.WindowShown += OnWindowShown;
+        uiService.Windows.WindowHidden += OnWindowHidden;
+    }
+
+    private void OnDisable()
+    {
+        Toolkit.Services.TryGet<RuntimeUIService>(
+            "ui",
+            out RuntimeUIService uiService);
+        uiService.Windows.WindowRegistered -= OnWindowRegistered;
+        uiService.Windows.WindowUnregistered -= OnWindowUnregistered;
+        uiService.Windows.WindowShown -= OnWindowShown;
+        uiService.Windows.WindowHidden -= OnWindowHidden;
+    }
+    
     private void Start()
     {
         if (!Toolkit.IsInitialized)
@@ -80,6 +102,26 @@ public sealed class RuntimeWindowSystemTest : MonoBehaviour
         window.SetPosition(windowPos);
     }
 
+    private void OnWindowRegistered(IRuntimeWindow window)
+    {
+        Debug.Log($"Window registered: {window.Id}");
+    }
+    
+    private void OnWindowUnregistered(IRuntimeWindow window)
+    {
+        Debug.Log($"Window unregistered: {window.Id}");
+    }
+    
+    private void OnWindowShown(IRuntimeWindow window)
+    {
+        Debug.Log($"Window shown: {window.Id}");
+    }
+    
+    private void OnWindowHidden(IRuntimeWindow window)
+    {
+        Debug.Log($"Window hidden: {window.Id}");
+    }
+    
     private sealed class TestWindow : RuntimeWindow
     {
         private readonly string _id;

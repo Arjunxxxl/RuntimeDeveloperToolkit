@@ -106,6 +106,11 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             OnShow();
         }
 
+        private void OnClickHideBtn()
+        {
+            _manager.Hide(Id);
+        }
+        
         public void Hide()
         {
             if (!_isInitialized)
@@ -351,7 +356,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
                 _closeButtonObject.AddComponent<Button>();
 
             _closeButton.onClick.AddListener(
-                Hide);
+                OnClickHideBtn);
 
             RectTransform buttonRect =
                 _closeButtonObject.GetComponent<RectTransform>();
