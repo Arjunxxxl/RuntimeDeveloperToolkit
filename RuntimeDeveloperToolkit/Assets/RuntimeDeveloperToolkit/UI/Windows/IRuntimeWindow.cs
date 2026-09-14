@@ -9,6 +9,8 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         string Title { get; }
 
         bool IsVisible { get; }
+        
+        bool IsFocused { get; }
 
         bool IsInitialized { get; }
 
@@ -21,6 +23,8 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         void Hide();
         
         void Focus();
+        
+        void Unfocus();
 
         void SetPosition(Vector2 position);
 

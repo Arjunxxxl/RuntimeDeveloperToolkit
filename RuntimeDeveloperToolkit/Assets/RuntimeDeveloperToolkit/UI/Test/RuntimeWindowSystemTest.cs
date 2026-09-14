@@ -27,6 +27,7 @@ public sealed class RuntimeWindowSystemTest : MonoBehaviour
         
         CreateAndShowWindow("test_window 1", new Vector2(0, 0), ui);
         CreateAndShowWindow("test_window 2", new Vector2(100, 100), ui);
+        CreateAndShowWindow("test_window 3", new Vector2(-100, -100), ui);
     }
     
     private void Update()

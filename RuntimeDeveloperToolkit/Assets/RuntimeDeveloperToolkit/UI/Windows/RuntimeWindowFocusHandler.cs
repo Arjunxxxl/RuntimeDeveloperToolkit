@@ -17,7 +17,12 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             if (_window == null)
                 return;
 
-            _window.Focus();
+            RuntimeWindowManager manager = _window.Manager;
+
+            if (manager == null)
+                return;
+
+            manager.FocusWindow(_window.Id);
         }
     }
 }

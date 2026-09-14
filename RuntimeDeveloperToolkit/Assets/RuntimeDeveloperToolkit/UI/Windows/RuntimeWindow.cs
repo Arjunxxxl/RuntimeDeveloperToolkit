@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RuntimeDeveloperToolkit.UI.Themes;
+using Object = UnityEngine.Object;
 
 namespace RuntimeDeveloperToolkit.UI.Windows
 {
@@ -32,8 +34,16 @@ namespace RuntimeDeveloperToolkit.UI.Windows
 
         public abstract string Title { get; }
         
+        public bool IsFocused { get; private set; }
+        public event Action Focused;
+        public event Action Unfocused;
+        
         private readonly List<RuntimeWindowResizeHandler> _resizeHandlers =
             new List<RuntimeWindowResizeHandler>();
+        
+        private RuntimeWindowManager _manager;
+
+        internal RuntimeWindowManager Manager => _manager;
 
         public bool IsVisible => _isVisible;
 
@@ -77,6 +87,11 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             Hide();
         }
 
+        public void SetManager(RuntimeWindowManager runtimeWindowManager)
+        {
+            _manager = runtimeWindowManager;
+        }
+
         public void Show()
         {
             if (!_isInitialized)
@@ -108,9 +123,31 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         public void Focus()
         {
             if (_root == null)
+            {
                 return;
+            }
+
+            if (IsFocused)
+            {
+                _root.SetAsLastSibling();
+                return;
+            }
 
             _root.SetAsLastSibling();
+
+            IsFocused = true;
+            Focused?.Invoke();
+        }
+        
+        public void Unfocus()
+        {
+            if (!IsFocused)
+            {
+                return;
+            }
+
+            IsFocused = false;
+            Unfocused?.Invoke();
         }
 
         public void SetPosition(Vector2 position)

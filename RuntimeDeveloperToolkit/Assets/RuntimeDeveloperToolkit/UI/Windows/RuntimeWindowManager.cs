@@ -11,6 +11,8 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             new Dictionary<string, IRuntimeWindow>();
 
         private Transform _parent;
+        
+        private IRuntimeWindow _focusedWindow;
 
         public int Count => _windows.Count;
 
@@ -59,6 +61,11 @@ namespace RuntimeDeveloperToolkit.UI.Windows
 
             window.Initialize(_parent);
             
+            if (window is RuntimeWindow runtimeWindow)
+            {
+                runtimeWindow.SetManager(this);
+            }
+            
             _windows.Add(window.Id, window);
 
             return true;
@@ -76,6 +83,12 @@ namespace RuntimeDeveloperToolkit.UI.Windows
                     out IRuntimeWindow window))
             {
                 return false;
+            }
+            
+            if (_focusedWindow == window)
+            {
+                window.Unfocus();
+                _focusedWindow = null;
             }
 
             window.Dispose();
@@ -137,7 +150,21 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             if (!window.IsInitialized)
                 return false;
 
+            if (_focusedWindow == window)
+            {
+                window.Focus();
+                return true;
+            }
+            
+            if (_focusedWindow != null) 
+            {
+                _focusedWindow.Unfocus();
+                _focusedWindow = null;
+            }
+            
+            _focusedWindow = window;
             window.Focus();
+            
             return true;
         }
 
@@ -145,9 +172,11 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         {
             foreach (IRuntimeWindow window in _windows.Values)
             {
+                window.Unfocus(); 
                 window.Dispose();
             }
 
+            _focusedWindow = null;
             _windows.Clear();
         }
     }
