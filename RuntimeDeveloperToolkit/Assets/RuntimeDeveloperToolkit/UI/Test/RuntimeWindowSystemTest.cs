@@ -50,6 +50,11 @@ public sealed class RuntimeWindowSystemTest : MonoBehaviour
 
             if (uiService != null)
                 uiService.Windows.FocusWindow("test_window 2");
+            
+            IRuntimeWindow focused =
+                uiService.Windows.FocusedWindow;
+
+            Debug.Log(focused?.Id);
         }
     }
 

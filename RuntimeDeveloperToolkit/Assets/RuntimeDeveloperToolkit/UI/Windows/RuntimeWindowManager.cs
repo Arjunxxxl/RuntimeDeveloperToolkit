@@ -14,7 +14,25 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         
         private IRuntimeWindow _focusedWindow;
 
+        public IRuntimeWindow FocusedWindow => _focusedWindow;
         public int Count => _windows.Count;
+        
+        public IReadOnlyCollection<IRuntimeWindow> VisibleWindows
+        {
+            get
+            {
+                List<IRuntimeWindow> visibleWindows =
+                    new List<IRuntimeWindow>();
+
+                foreach (IRuntimeWindow window in _windows.Values)
+                {
+                    if (window.IsVisible)
+                        visibleWindows.Add(window);
+                }
+
+                return visibleWindows;
+            }
+        }
 
         public void Initialize(Transform parent)
         {
@@ -124,6 +142,12 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             if (!TryGet(windowId, out IRuntimeWindow window))
             {
                 return false;
+            }
+
+            if (_focusedWindow == window)
+            {
+                window.Unfocus();
+                _focusedWindow = null;
             }
 
             window.Hide();
