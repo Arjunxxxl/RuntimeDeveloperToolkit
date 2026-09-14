@@ -19,6 +19,8 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         void Show();
 
         void Hide();
+        
+        void Focus();
 
         void SetPosition(Vector2 position);
 

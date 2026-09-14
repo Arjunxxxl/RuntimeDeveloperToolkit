@@ -125,6 +125,21 @@ namespace RuntimeDeveloperToolkit.UI.Windows
                 window.Hide();
             }
         }
+        
+        public bool FocusWindow(string windowId)
+        {
+            if (string.IsNullOrEmpty(windowId))
+                return false;
+
+            if (!_windows.TryGetValue(windowId, out IRuntimeWindow window))
+                return false;
+
+            if (!window.IsInitialized)
+                return false;
+
+            window.Focus();
+            return true;
+        }
 
         public void DisposeAll()
         {

@@ -68,6 +68,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             CreateContentRoot();
             AddDragHandler();
             CreateAllResizeHandles();
+            CreateFocusHandler();
             
             _isInitialized = true;
 
@@ -102,6 +103,14 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             _rootObject.SetActive(false);
 
             OnHide();
+        }
+
+        public void Focus()
+        {
+            if (_root == null)
+                return;
+
+            _root.SetAsLastSibling();
         }
 
         public void SetPosition(Vector2 position)
@@ -394,6 +403,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
                     -46f);
         }
 
+        
         private void AddDragHandler()
         {
             RuntimeWindowDragHandler dragHandler = _titleBarObject.AddComponent<RuntimeWindowDragHandler>();
@@ -515,6 +525,14 @@ namespace RuntimeDeveloperToolkit.UI.Windows
                 canvasRect);
 
             _resizeHandlers.Add(resizeHandler);
+        }
+
+        private void CreateFocusHandler()
+        {
+            RuntimeWindowFocusHandler focusHandler =
+                _root.gameObject.AddComponent<RuntimeWindowFocusHandler>();
+
+            focusHandler.Initialize(this);
         }
         
         public void ApplyTheme(RuntimeUIThemeData theme)

@@ -24,9 +24,38 @@ public sealed class RuntimeWindowSystemTest : MonoBehaviour
 
             return;
         }
+        
+        CreateAndShowWindow("test_window 1", new Vector2(0, 0), ui);
+        CreateAndShowWindow("test_window 2", new Vector2(100, 100), ui);
+    }
+    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Toolkit.Services.TryGet<RuntimeUIService>(
+                "ui",
+                out RuntimeUIService uiService);
 
+            if (uiService != null)
+                uiService.Windows.FocusWindow("test_window 1");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Toolkit.Services.TryGet<RuntimeUIService>(
+                "ui",
+                out RuntimeUIService uiService);
+
+            if (uiService != null)
+                uiService.Windows.FocusWindow("test_window 2");
+        }
+    }
+
+    private void CreateAndShowWindow(string windowId, Vector2 windowPos, RuntimeUIService ui)
+    {
         TestWindow window =
-            new TestWindow();
+            new TestWindow(windowId, windowId);
 
         bool registered =
             ui.Windows.Register(window);
@@ -37,21 +66,27 @@ public sealed class RuntimeWindowSystemTest : MonoBehaviour
         Debug.Log(
             $"Window count: {ui.Windows.Count}");
 
-        ui.Windows.Show("test_window");
+        ui.Windows.Show(windowId);
 
         Debug.Log(
             $"Window visible: {window.IsVisible}");
 
-        window.SetPosition(
-            new Vector2(0f, 0f));
+        window.SetPosition(windowPos);
     }
 
     private sealed class TestWindow : RuntimeWindow
     {
-        public override string Id =>
-            "test_window";
+        private readonly string _id;
+        private readonly string _title;
+        
+        public override string Id => _id;
 
-        public override string Title =>
-            "Test Window";
+        public override string Title => _title;
+
+        public TestWindow(string id, string title)
+        {
+            _id = id;
+            _title = id;
+        }
     }
 }
