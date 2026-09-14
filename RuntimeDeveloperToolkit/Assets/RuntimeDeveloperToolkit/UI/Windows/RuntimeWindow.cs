@@ -87,7 +87,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             Hide();
         }
 
-        public void SetManager(RuntimeWindowManager runtimeWindowManager)
+        internal void SetManager(RuntimeWindowManager runtimeWindowManager)
         {
             _manager = runtimeWindowManager;
         }
@@ -196,6 +196,8 @@ namespace RuntimeDeveloperToolkit.UI.Windows
 
             _isVisible = false;
             _isInitialized = false;
+            
+            IsFocused = false;
         }
 
         protected virtual void OnInitialize()

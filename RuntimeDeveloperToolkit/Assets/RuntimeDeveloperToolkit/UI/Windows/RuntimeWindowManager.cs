@@ -84,6 +84,9 @@ namespace RuntimeDeveloperToolkit.UI.Windows
 
             window.Initialize(_parent);
             
+            if (!window.IsInitialized)
+                return false;
+            
             if (window is RuntimeWindow runtimeWindow)
             {
                 runtimeWindow.SetManager(this);
@@ -138,6 +141,9 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             {
                 return false;
             }
+            
+            if (window.IsVisible)
+                return true;
 
             window.Show();
             WindowShown?.Invoke(window);
@@ -151,6 +157,9 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             {
                 return false;
             }
+            
+            if (!window.IsVisible)
+                return true;
 
             if (_focusedWindow == window)
             {
@@ -168,7 +177,20 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         {
             foreach (IRuntimeWindow window in _windows.Values)
             {
+                if (_focusedWindow == window)
+                {
+                    window.Unfocus();
+                    _focusedWindow = null;
+                }
+                
+                bool wasVisible = window.IsVisible;
+                
                 window.Hide();
+                
+                if (wasVisible)
+                {
+                    WindowHidden?.Invoke(window);
+                }
             }
         }
         
@@ -181,6 +203,9 @@ namespace RuntimeDeveloperToolkit.UI.Windows
                 return false;
 
             if (!window.IsInitialized)
+                return false;
+            
+            if (!window.IsVisible)
                 return false;
 
             if (_focusedWindow == window)
