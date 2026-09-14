@@ -1,0 +1,17 @@
+{
+  "name": "RuntimeDeveloperToolkit.Performance",
+  "rootNamespace": "RuntimeDeveloperToolkit.Performance",
+  "references": [
+    "RuntimeDeveloperToolkit.Core",
+    "RuntimeDeveloperToolkit.Settings"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

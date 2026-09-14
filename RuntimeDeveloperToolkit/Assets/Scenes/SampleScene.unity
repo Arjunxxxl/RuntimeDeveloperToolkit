@@ -427,6 +427,76 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &433874712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 433874714}
+  - component: {fileID: 433874713}
+  - component: {fileID: 433874715}
+  - component: {fileID: 433874716}
+  m_Layer: 0
+  m_Name: RuntimePerformanceSamplerTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &433874713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433874712}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a944cb7e3e86c14186c9ca350aba74a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RuntimeDeveloperToolkit.Performance.Tests::RuntimeDeveloperToolkit.Performance.Tests.RuntimePerformanceSamplerTest
+--- !u!4 &433874714
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433874712}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &433874715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433874712}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c136cf812c490ef409a910ac21d88aba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RuntimeDeveloperToolkit.Performance.Tests::RuntimeDeveloperToolkit.Performance.Tests.RuntimePerformanceHistoryTest
+--- !u!114 &433874716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433874712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c15b4af79e6800f4985c40d2de070851, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RuntimeDeveloperToolkit.Performance.Tests::RuntimeDeveloperToolkit.Performance.Tests.RuntimePerformanceServiceTest
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,7 +650,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1199878993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -799,3 +869,4 @@ SceneRoots:
   - {fileID: 1746999344}
   - {fileID: 1474863099}
   - {fileID: 1199878994}
+  - {fileID: 433874714}
