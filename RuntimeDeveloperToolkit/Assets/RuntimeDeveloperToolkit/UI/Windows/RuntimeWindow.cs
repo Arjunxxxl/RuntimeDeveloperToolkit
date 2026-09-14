@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RuntimeDeveloperToolkit.UI.Themes;
@@ -20,7 +21,7 @@ namespace RuntimeDeveloperToolkit.UI.Windows
  
         private GameObject _titleObject;
         private Text _titleText;
-
+ 
         private GameObject _closeButtonObject;
         private Button _closeButton;
 
@@ -30,6 +31,9 @@ namespace RuntimeDeveloperToolkit.UI.Windows
         public abstract string Id { get; }
 
         public abstract string Title { get; }
+        
+        private readonly List<RuntimeWindowResizeHandler> _resizeHandlers =
+            new List<RuntimeWindowResizeHandler>();
 
         public bool IsVisible => _isVisible;
 
@@ -62,7 +66,9 @@ namespace RuntimeDeveloperToolkit.UI.Windows
             CreateTitle();
             CreateCloseButton();
             CreateContentRoot();
-
+            AddDragHandler();
+            CreateAllResizeHandles();
+            
             _isInitialized = true;
 
             OnInitialize();
@@ -386,6 +392,129 @@ namespace RuntimeDeveloperToolkit.UI.Windows
                 new Vector2(
                     -10f,
                     -46f);
+        }
+
+        private void AddDragHandler()
+        {
+            RuntimeWindowDragHandler dragHandler = _titleBarObject.AddComponent<RuntimeWindowDragHandler>();
+            dragHandler.Initialize(
+                _root,
+                _root.GetComponentInParent<Canvas>().GetComponent<RectTransform>());
+        }
+
+        private void CreateAllResizeHandles()
+        {
+            if (_root == null)
+                return;
+
+            Canvas canvas = _root.GetComponentInParent<Canvas>();
+
+            if (canvas == null)
+                return;
+
+            RectTransform canvasRect =
+                canvas.GetComponent<RectTransform>();
+
+            CreateResizeHandle(
+                "TopLeft",
+                RuntimeWindowResizeDirection.TopLeft,
+                new Vector2(0f, 1f),
+                new Vector2(0f, 1f),
+                new Vector2(20f, 20f));
+
+            CreateResizeHandle(
+                "Top",
+                RuntimeWindowResizeDirection.Top,
+                new Vector2(0.5f, 1f),
+                new Vector2(0.5f, 1f),
+                new Vector2(100f, 20f));
+
+            CreateResizeHandle(
+                "TopRight",
+                RuntimeWindowResizeDirection.TopRight,
+                new Vector2(1f, 1f),
+                new Vector2(1f, 1f),
+                new Vector2(20f, 20f));
+
+            CreateResizeHandle(
+                "Left",
+                RuntimeWindowResizeDirection.Left,
+                new Vector2(0f, 0.5f),
+                new Vector2(0f, 0.5f),
+                new Vector2(20f, 100f));
+
+            CreateResizeHandle(
+                "Right",
+                RuntimeWindowResizeDirection.Right,
+                new Vector2(1f, 0.5f),
+                new Vector2(1f, 0.5f),
+                new Vector2(20f, 100f));
+
+            CreateResizeHandle(
+                "BottomLeft",
+                RuntimeWindowResizeDirection.BottomLeft,
+                new Vector2(0f, 0f),
+                new Vector2(0f, 0f),
+                new Vector2(20f, 20f));
+
+            CreateResizeHandle(
+                "Bottom",
+                RuntimeWindowResizeDirection.Bottom,
+                new Vector2(0.5f, 0f),
+                new Vector2(0.5f, 0f),
+                new Vector2(100f, 20f));
+
+            CreateResizeHandle(
+                "BottomRight",
+                RuntimeWindowResizeDirection.BottomRight,
+                new Vector2(1f, 0f),
+                new Vector2(1f, 0f),
+                new Vector2(20f, 20f));
+        }
+        
+        private void CreateResizeHandle(string handleName,
+            RuntimeWindowResizeDirection direction,
+            Vector2 anchor,
+            Vector2 pivot,
+            Vector2 size)
+        {
+            GameObject handleObject =
+                new GameObject(handleName + " Resize Handle");
+
+            RectTransform handle =
+                handleObject.AddComponent<RectTransform>();
+
+            handle.SetParent(_root, false);
+
+            handle.anchorMin = anchor;
+            handle.anchorMax = anchor;
+            handle.pivot = pivot;
+            handle.anchoredPosition = Vector2.zero;
+            handle.sizeDelta = size;
+
+            Image image =
+                handleObject.AddComponent<Image>();
+
+            // Temporary visibility for testing.
+            image.color =
+                new Color(1f, 1f, 1f, 0.15f);
+
+            RuntimeWindowResizeHandler resizeHandler =
+                handleObject.AddComponent<RuntimeWindowResizeHandler>();
+
+            resizeHandler.SetDirection(direction);
+
+            Canvas canvas =
+                _root.GetComponentInParent<Canvas>();
+
+            RectTransform canvasRect =
+                canvas.GetComponent<RectTransform>();
+
+            resizeHandler.Initialize(
+                _root,
+                canvasRect);
+
+            _resizeHandlers.Add(resizeHandler);
         }
         
         public void ApplyTheme(RuntimeUIThemeData theme)
