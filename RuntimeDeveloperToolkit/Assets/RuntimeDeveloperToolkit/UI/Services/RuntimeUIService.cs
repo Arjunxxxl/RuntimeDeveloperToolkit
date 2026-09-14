@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using RuntimeDeveloperToolkit.UI.Windows;
 using RuntimeDeveloperToolkit.UI.Themes;
+using RuntimeDeveloperToolkit.Core.Scheduling;
 
 namespace RuntimeDeveloperToolkit.UI.Services
 {
@@ -14,9 +15,12 @@ namespace RuntimeDeveloperToolkit.UI.Services
         private Canvas _canvas;
         private GameObject _eventSystemObject;
         
+        private RuntimeUpdateScheduler _scheduler;
+        
         public RuntimeWindowManager Windows { get; private set; }
         
         private RuntimeUITheme _theme;
+        private RuntimeUIInputService _input;
 
         public string Id => "ui";
 
@@ -27,7 +31,8 @@ namespace RuntimeDeveloperToolkit.UI.Services
         public Canvas Canvas => _canvas;
         
         public RuntimeUITheme Theme => _theme;
-
+        public RuntimeUIInputService Input => _input;
+        
         public void Initialize()
         {
             if (IsInitialized)
@@ -45,6 +50,18 @@ namespace RuntimeDeveloperToolkit.UI.Services
             
             _theme = new RuntimeUITheme();
             _theme.ThemeChanged += OnThemeChanged;
+            
+            _input = new RuntimeUIInputService();
+            _input.Initialize();
+            
+            _scheduler = RuntimeDeveloperToolkit.Scheduler;
+
+            if (_scheduler != null)
+            {
+                _scheduler.Register(
+                    OnUpdate,
+                    RuntimeUpdateRate.EveryFrame);
+            }
         }
 
         public void Shutdown()
@@ -65,6 +82,18 @@ namespace RuntimeDeveloperToolkit.UI.Services
             {
                 _theme.ThemeChanged -= OnThemeChanged;
                 _theme = null;
+            }
+
+            if (_input != null)
+            {
+                _input?.Shutdown();
+                _input = null;
+            }
+            
+            if (_scheduler != null)
+            {
+                _scheduler.Unregister(OnUpdate);
+                _scheduler = null;
             }
 
             Windows = null;
@@ -144,6 +173,14 @@ namespace RuntimeDeveloperToolkit.UI.Services
                 return;
 
             Windows.ApplyTheme(theme);
+        }
+        
+        private void OnUpdate(RuntimeUpdateContext context)
+        {
+            if (!IsInitialized)
+                return;
+
+            _input?.Update();
         }
     }
 }
