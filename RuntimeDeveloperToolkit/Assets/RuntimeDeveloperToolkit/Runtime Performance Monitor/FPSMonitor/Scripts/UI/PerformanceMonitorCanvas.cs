@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 namespace RuntimePerformanceMonitor
 {
@@ -16,6 +15,14 @@ namespace RuntimePerformanceMonitor
     
     public class PerformanceMonitorCanvas : MonoBehaviour
     {
+        [Header("Container")]
+        public GameObject containerGo;
+        
+        [Header("Visibility Button")]
+        public Image visibilityBtmImg;
+        public Sprite spriteVisible;
+        public Sprite spriteHidden;
+        
         [Header("Tabs")] 
         public MonitorCanvasTabButton buttonGraph;
         public MonitorCanvasTabButton buttonGpu;
@@ -34,9 +41,12 @@ namespace RuntimePerformanceMonitor
         
         private MonitorTabs activeTab = MonitorTabs.Unknown;
         private MonitorTabs previousActiveTab = MonitorTabs.Unknown;
+        private bool isVisible = true;
         
         private FPSView fpsView;
         private RenderingInfoView renderingInfoView;
+        private SystemInfoView systemInfoView;
+        private AppInfoView appInfoView;
 
         internal static Action<MonitorTabs> OnClickTab;
 
@@ -60,19 +70,42 @@ namespace RuntimePerformanceMonitor
         {
             fpsView = GetComponentInChildren<FPSView>();
             renderingInfoView = GetComponentInChildren<RenderingInfoView>();
+            systemInfoView = GetComponentInChildren<SystemInfoView>();
+            appInfoView = GetComponentInChildren<AppInfoView>();
             
             fpsView.SetUp();
             renderingInfoView.SetUp();
+            systemInfoView.SetUp();
+            appInfoView.SetUp();
 
             activeTab = MonitorTabs.Unknown;
             previousActiveTab = MonitorTabs.Unknown;
             DisableAllTabs();
+            
+            isVisible = true;
+            SetVisibility();
             
             OnClickTab?.Invoke(MonitorTabs.Graph);
         }
 
         #endregion
 
+        #region Visibility
+
+        public void OnClickVisibilityButton()
+        {
+            isVisible = !isVisible;
+            SetVisibility();
+        }
+
+        private void SetVisibility()
+        {
+            containerGo.SetActive(isVisible);
+            visibilityBtmImg.sprite = isVisible ? spriteHidden : spriteVisible;
+        }
+
+        #endregion
+        
         #region Fps View
 
         internal void UpdateFpsView(FPSSnapshot fpsSnapshot, FPSStats fpsStats)
@@ -174,6 +207,24 @@ namespace RuntimePerformanceMonitor
         internal void UpdateRenderingStats(RendererStats rendererStats)
         {
             renderingInfoView.UpdateDataInUi(rendererStats);
+        }
+
+        #endregion
+
+        #region System Stats
+
+        internal void UpdateSystemStats(SystemStats systemStats)
+        {
+            systemInfoView.UpdateDataInUi(systemStats);
+        }
+
+        #endregion
+
+        #region App Stats
+
+        internal void UpdateAppStats(AppStats appStats)
+        {
+            appInfoView.UpdateDataInUi(appStats);
         }
 
         #endregion

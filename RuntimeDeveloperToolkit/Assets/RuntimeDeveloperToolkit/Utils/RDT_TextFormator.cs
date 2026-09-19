@@ -15,4 +15,25 @@ public class RDT_TextFormator : MonoBehaviour
 
         return value.ToString();
     }
+    
+    public static string GetMemoryString(int megabytes)
+    {
+        if (megabytes >= 1024)
+            return $"{megabytes / 1024f:0.##} GB";
+
+        return $"{megabytes} MB";
+    }
+
+    public static string GetFrequencyString(int megahertz)
+    {
+        if (megahertz <= 0)
+        {
+            return "N/A";
+        }
+        
+        if (megahertz >= 1000)
+            return $"{megahertz / 1000f:0.##} GHz";
+
+        return $"{megahertz} MHz";
+    }
 }

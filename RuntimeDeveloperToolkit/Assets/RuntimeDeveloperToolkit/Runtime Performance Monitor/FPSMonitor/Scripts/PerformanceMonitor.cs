@@ -12,6 +12,8 @@ namespace RuntimePerformanceMonitor
         private FPSCalculator fpsCalculator;
         private FPSHistory fpsHistory;
         private RenderingInfoCalculator renderingInfoCalculator;
+        private SystemStatsCalculator systemStatsCalculator;
+        private AppStatsCalculator appStatsCalculator;
         private PerformanceMonitorCanvas performanceMonitorCanvas;
 
         private float LastCaptureTime_RenderingStats = 0.0f;
@@ -25,6 +27,8 @@ namespace RuntimePerformanceMonitor
             fpsCalculator = GetComponentInChildren<FPSCalculator>();
             fpsHistory = GetComponentInChildren<FPSHistory>();
             renderingInfoCalculator = GetComponentInChildren<RenderingInfoCalculator>();
+            systemStatsCalculator = GetComponentInChildren<SystemStatsCalculator>();
+            appStatsCalculator = GetComponentInChildren<AppStatsCalculator>();
             performanceMonitorCanvas = GetComponentInChildren<PerformanceMonitorCanvas>();
         }
 
@@ -32,6 +36,8 @@ namespace RuntimePerformanceMonitor
         {
             MonitorRunning = false;
 
+            systemStatsCalculator.SetUp();
+            appStatsCalculator.SetUp();
             performanceMonitorCanvas.SetUp();
             StartCoroutine(StartFpsMonitor());
         }
@@ -43,6 +49,12 @@ namespace RuntimePerformanceMonitor
             fpsCalculator.SetUp(fpsRate);
             fpsHistory.SetUp(HistorySize);
             renderingInfoCalculator.SetUp();
+            
+            SystemStats systemStats = systemStatsCalculator.GetSystemStats();
+            performanceMonitorCanvas.UpdateSystemStats(systemStats);
+            
+            AppStats appStats = appStatsCalculator.GetAppStats();
+            performanceMonitorCanvas.UpdateAppStats(appStats);
             
             LastCaptureTime_RenderingStats = Time.unscaledTime + Delay_RenderingStats;
             
