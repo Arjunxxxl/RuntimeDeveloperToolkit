@@ -43,7 +43,7 @@ namespace RuntimePerformanceMonitor
             developmentBuildTxt.text = appStats.isDevelopmentBuild ? "Yes" : "No";
             qualityLevelTxt.text = appStats.qualityLevel;
             colorSpaceTxt.text = appStats.colorSpace;
-            targetFrameRateTxt.text = appStats.targetFrameRate.ToString();
+            targetFrameRateTxt.text = appStats.targetFrameRate == -1 ? "Max" : appStats.targetFrameRate.ToString();
 
             if (appStats.vSyncCount == 0)
             {
