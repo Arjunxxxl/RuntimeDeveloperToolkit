@@ -76,6 +76,8 @@ namespace RuntimePerformanceMonitor
             
             float minFps = float.MaxValue;
             float maxFps = float.MinValue;
+            float minFrameTime = float.MaxValue;
+            float maxFrameTime = float.MinValue;
             float totalFrameTime = 0;
             
             int totalSnapShots = curSnapshotCount;
@@ -93,6 +95,16 @@ namespace RuntimePerformanceMonitor
                 if (fpsSnapshot.FPS > maxFps)
                 {
                     maxFps = fpsSnapshot.FPS;
+                }
+
+                if (fpsSnapshot.FrameTime < minFrameTime)
+                {
+                    minFrameTime = fpsSnapshot.FrameTime;
+                }
+
+                if (fpsSnapshot.FrameTime > maxFrameTime)
+                {
+                    maxFrameTime = fpsSnapshot.FrameTime;
                 }
             }
             
@@ -122,6 +134,8 @@ namespace RuntimePerformanceMonitor
             curFpsStats.AverageFps = averageFPS;
             curFpsStats.MaxFps = maxFps;
             curFpsStats.MinFps = minFps;
+            curFpsStats.MinFrameTime = minFrameTime;
+            curFpsStats.MaxFrameTime = maxFrameTime;
             curFpsStats.FPSLow1Per = averageFPSLow1Per;
             curFpsStats.FPSLow10Per = averageFPSLow10Per;
         }

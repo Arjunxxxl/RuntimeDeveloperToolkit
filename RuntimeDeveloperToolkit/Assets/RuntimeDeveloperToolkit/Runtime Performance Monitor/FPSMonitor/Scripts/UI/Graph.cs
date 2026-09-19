@@ -14,8 +14,8 @@ namespace RuntimePerformanceMonitor
         public void SetData(float[] data, float minVal, float maxVal)
         {
             values = data;
-            minValue = minVal;
-            maxValue = maxVal;
+            minValue = minVal * 0.75f;
+            maxValue = maxVal * 1.25f;
             SetVerticesDirty();
         }
 
