@@ -1,8 +1,6 @@
-using UnityEngine;
-
 namespace RuntimePerformanceMonitor
 {
-    public class FPSCalculator : MonoBehaviour
+    public class FPSCalculator
     {
         // FPS Data
         private FPSSnapshot curFPSSnapshot;
@@ -14,6 +12,17 @@ namespace RuntimePerformanceMonitor
         // Accumulated Frame Data
         private float accumulatedFrameTime;
         private int accumulatedFrames;
+
+        #region Constructor
+        
+        internal FPSCalculator()
+        {
+            
+        }
+        
+        #endregion
+        
+        #region SetUp
         
         internal void SetUp(FPSRate fpsCalcRate)
         {
@@ -28,7 +37,7 @@ namespace RuntimePerformanceMonitor
             switch (curFpsCalcRate)
             {
                 case FPSRate.EveryFrame:
-                    fpsCalcDelay = -1.0f;
+                    fpsCalcDelay = 0.0f;
                     break;
                 
                 case FPSRate.Hz_1:
@@ -53,12 +62,16 @@ namespace RuntimePerformanceMonitor
             }
         }
 
+        #endregion
+        
+        #region Calculation
+        
         internal (FPSSnapshot, bool) CalcFPS(float deltaTime)
         {
             if (curFpsCalcRate == FPSRate.EveryFrame)
             {
                 float frameTime = deltaTime;
-                if (frameTime == 0.0f)
+                if (frameTime <= 0.0f)
                 {
                     return (curFPSSnapshot, false);
                 }
@@ -85,7 +98,7 @@ namespace RuntimePerformanceMonitor
                     return (curFPSSnapshot, false);
                 }
                 
-                if (accumulatedFrameTime == 0.0f || accumulatedFrames == 0)
+                if (accumulatedFrameTime <= 0.0f || accumulatedFrames <= 0) 
                 {
                     return (curFPSSnapshot, false);
                 }
@@ -104,6 +117,12 @@ namespace RuntimePerformanceMonitor
             }
         }
         
+        #endregion
+        
+        #region Getter
+        
         internal float GetFpsCalcDelay() => fpsCalcDelay;
+        
+        #endregion
     }
 }

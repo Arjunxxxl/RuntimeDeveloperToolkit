@@ -2,16 +2,31 @@ using UnityEngine;
 
 namespace RuntimePerformanceMonitor
 {
-    public class SystemStatsCalculator : MonoBehaviour
+    public class SystemStatsCalculator
     {
         private SystemStats systemStats;
 
+        #region Constructor
+
+        internal SystemStatsCalculator()
+        {
+            
+        }
+        
+        #endregion
+        
+        #region SetUp
+        
         internal void SetUp()
         {
             systemStats = new SystemStats();
             Calculate();
         }
 
+        #endregion
+
+        #region Calculation
+        
         private void Calculate()
         {
             // Device
@@ -40,9 +55,15 @@ namespace RuntimePerformanceMonitor
             systemStats.refreshRate = (float)Screen.currentResolution.refreshRateRatio.value;
         }
 
+        #endregion
+
+        #region Getter
+
         internal SystemStats GetSystemStats()
         {
             return systemStats;
         }
+        
+        #endregion
     }
 }

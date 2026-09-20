@@ -53,8 +53,8 @@ namespace RuntimePerformanceMonitor
             gpuVendorTxt.text = systemStats.gpuVendor;
             graphicAPITxt.text = systemStats.graphicAPI;
             graphicsDeviceVersionTxt.text = systemStats.graphicsDeviceVersion;
-            gpuMemoryTxt.text = RDT_TextFormator.GetMemoryString(systemStats.gpuMemory);
-            systemRAMTxt.text = RDT_TextFormator.GetMemoryString(systemStats.systemRAM);
+            gpuMemoryTxt.text = RDT_TextFormator.GetMemoryString(systemStats.gpuMemory) + " VRAM";
+            systemRAMTxt.text = RDT_TextFormator.GetMemoryString(systemStats.systemRAM) + " RAM";
             displayResolutionTxt.text = systemStats.displayResolutionWidth + "x" + systemStats.displayResolutionHeight;
             refreshRateTxt.text = systemStats.refreshRate.ToString("N1") + " Hz";
         }

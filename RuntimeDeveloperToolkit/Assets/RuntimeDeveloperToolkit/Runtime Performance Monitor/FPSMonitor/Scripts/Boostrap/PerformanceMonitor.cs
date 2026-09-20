@@ -18,18 +18,36 @@ namespace RuntimePerformanceMonitor
 
         private float LastCaptureTime_RenderingStats = 0.0f;
         
-        private readonly int HistorySize = 100;
+        private int HistorySize = 300;
         private readonly float StartDelay = 0.1f;
         private readonly float Delay_RenderingStats = 1.0f;
+
+        public static PerformanceMonitor Instance;
         
         private void Awake()
         {
-            fpsCalculator = GetComponentInChildren<FPSCalculator>();
-            fpsHistory = GetComponentInChildren<FPSHistory>();
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else if(Instance != this)
+            {
+                Destroy(gameObject);
+            }
+            
+            DontDestroyOnLoad(gameObject);
+            
+            fpsCalculator = new FPSCalculator();
+            fpsHistory = new FPSHistory();
+            systemStatsCalculator = new SystemStatsCalculator();
+            appStatsCalculator = new AppStatsCalculator();
             renderingInfoCalculator = GetComponentInChildren<RenderingInfoCalculator>();
-            systemStatsCalculator = GetComponentInChildren<SystemStatsCalculator>();
-            appStatsCalculator = GetComponentInChildren<AppStatsCalculator>();
             performanceMonitorCanvas = GetComponentInChildren<PerformanceMonitorCanvas>();
+
+            if (HistorySize < 50)
+            {
+                HistorySize = 50;
+            }
         }
 
         private void Start()
@@ -58,7 +76,7 @@ namespace RuntimePerformanceMonitor
             AppStats appStats = appStatsCalculator.GetAppStats();
             performanceMonitorCanvas.UpdateAppStats(appStats);
             
-            LastCaptureTime_RenderingStats = Time.unscaledTime + Delay_RenderingStats;
+            LastCaptureTime_RenderingStats = Time.unscaledTime;
             
             MonitorRunning = true;
         }
@@ -98,7 +116,7 @@ namespace RuntimePerformanceMonitor
                 RendererStats rendererStats = renderingInfoCalculator.Calculate();
                 performanceMonitorCanvas.UpdateRenderingStats(rendererStats);
                 
-                LastCaptureTime_RenderingStats = Time.unscaledTime + Delay_RenderingStats;
+                LastCaptureTime_RenderingStats = Time.unscaledTime; 
             }
         }
     }

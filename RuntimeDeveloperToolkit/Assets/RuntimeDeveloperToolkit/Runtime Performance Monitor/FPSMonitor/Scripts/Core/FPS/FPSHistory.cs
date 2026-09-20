@@ -1,13 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace RuntimePerformanceMonitor
 {
-    public class FPSHistory : MonoBehaviour
+    public class FPSHistory
     {
+        // History Data
         private FPSSnapshot[] fpsSnapshotHistory;
         private FPSSnapshot[] sortedFpsSnapshotHistory;
-          
+     
+        // Varriables
         private int historySize;
         private int writeIndex = 0;
         private int snapshotCount = 0;
@@ -15,6 +18,15 @@ namespace RuntimePerformanceMonitor
         // FPS Stats Data
         private FPSStats curFpsStats;
 
+        #region Constructor
+
+        internal FPSHistory()
+        {
+            
+        }
+
+        #endregion
+        
         #region Set Up
 
         internal void SetUp(int _historySize)
@@ -68,6 +80,7 @@ namespace RuntimePerformanceMonitor
             float totalFrameTime = 0;
             
             int totalSnapShots = snapshotCount;
+            
             sortedFpsSnapshotHistory = new FPSSnapshot[totalSnapShots];
             
             for (int idx = 0; idx < totalSnapShots; idx++)
@@ -76,7 +89,7 @@ namespace RuntimePerformanceMonitor
                             % historySize;
                 
                 FPSSnapshot fpsSnapshot = fpsSnapshotHistory[index];
-                sortedFpsSnapshotHistory[idx] = fpsSnapshot;
+                sortedFpsSnapshotHistory[idx] = fpsSnapshotHistory[index];
                 
                 totalFrameTime += fpsSnapshot.FrameTime;
 
@@ -149,7 +162,6 @@ namespace RuntimePerformanceMonitor
 
         #region Getter
 
-        internal FPSStats GetFPSStats() => curFpsStats;
         internal FPSSnapshot[] GetFPSSnapShotHistory() => fpsSnapshotHistory;
         internal int GetHistorySize() => historySize;
         internal int GetWriteIndex() => writeIndex;

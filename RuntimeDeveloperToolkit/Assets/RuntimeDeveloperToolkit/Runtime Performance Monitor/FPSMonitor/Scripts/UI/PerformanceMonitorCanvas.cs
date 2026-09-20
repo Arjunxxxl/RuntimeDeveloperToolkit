@@ -8,7 +8,7 @@ namespace RuntimePerformanceMonitor
     {
         Unknown = -1,
         Graph,
-        GPU,
+        Rendering,
         System,
         App
     }
@@ -25,13 +25,13 @@ namespace RuntimePerformanceMonitor
         
         [Header("Tabs")] 
         public MonitorCanvasTabButton buttonGraph;
-        public MonitorCanvasTabButton buttonGpu;
+        public MonitorCanvasTabButton buttonRendering;
         public MonitorCanvasTabButton buttonSystem;
         public MonitorCanvasTabButton buttonApp;
 
         [Header("Tab Content Canvases")]
         public Canvas canvasGraph;
-        public Canvas canvasGpu;
+        public Canvas canvasRendering;
         public Canvas canvasSystem;
         public Canvas canvasApp;
         
@@ -142,9 +142,9 @@ namespace RuntimePerformanceMonitor
                     buttonGraph.SetButtonState(true);
                     canvasGraph.enabled = true;
                     break;
-                case MonitorTabs.GPU:
-                    buttonGpu.SetButtonState(true);
-                    canvasGpu.enabled = true;
+                case MonitorTabs.Rendering:
+                    buttonRendering.SetButtonState(true);
+                    canvasRendering.enabled = true;
                     break;
                 case MonitorTabs.System:
                     buttonSystem.SetButtonState(true);
@@ -170,9 +170,9 @@ namespace RuntimePerformanceMonitor
                     buttonGraph.SetButtonState(false);
                     canvasGraph.enabled = false;
                     break;
-                case MonitorTabs.GPU:
-                    buttonGpu.SetButtonState(false);
-                    canvasGpu.enabled = false;
+                case MonitorTabs.Rendering:
+                    buttonRendering.SetButtonState(false);
+                    canvasRendering.enabled = false;
                     break;
                 case MonitorTabs.System:
                     buttonSystem.SetButtonState(false);
@@ -188,7 +188,7 @@ namespace RuntimePerformanceMonitor
         private void DisableAllTabs()
         {
             canvasGraph.enabled = false;
-            canvasGpu.enabled = false;
+            canvasRendering.enabled = false;
             canvasSystem.enabled = false;
             canvasApp.enabled = false;
         }

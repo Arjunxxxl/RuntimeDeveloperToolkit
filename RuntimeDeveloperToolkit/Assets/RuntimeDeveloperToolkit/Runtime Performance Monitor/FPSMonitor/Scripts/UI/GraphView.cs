@@ -52,7 +52,7 @@ namespace RuntimePerformanceMonitor
             }
             
             minValTxt.text = (minVal * minValueMul).ToString("N" + decimalPt) + suffix;
-            maxValTxt.text = (minVal * maxValueMul).ToString("N" + decimalPt) + suffix;
+            maxValTxt.text = (maxVal * maxValueMul).ToString("N" + decimalPt) + suffix;
             midValTxt.text = ((minVal * minValueMul) + (((maxVal * maxValueMul) - (minVal * minValueMul)) / 2.0f)).ToString("N" + decimalPt) + suffix;
             graph.SetData(snapshotHistory, historySize, writeIndex, snapshotCount, showFPS, showFrameTime, minVal * minValueMul, maxVal * maxValueMul);
             

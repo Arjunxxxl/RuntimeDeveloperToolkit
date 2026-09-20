@@ -2,15 +2,31 @@ using UnityEngine;
 
 namespace RuntimePerformanceMonitor
 {
-    public class AppStatsCalculator : MonoBehaviour
+    public class AppStatsCalculator
     {
+        // App Stats
         private AppStats appStats;
+
+        #region Constructor
+
+        internal AppStatsCalculator()
+        {
+            
+        }
+
+        #endregion
+
+        #region SetUp
 
         internal void SetUp()
         {
             appStats = new AppStats();
             Calculate();
         }
+
+        #endregion
+
+        #region Data Calculation
 
         private void Calculate()
         {
@@ -81,9 +97,15 @@ namespace RuntimePerformanceMonitor
             return QualitySettings.names[index];
         }
 
+        #endregion
+
+        #region Getter
+
         internal AppStats GetAppStats()
         {
             return appStats;
         }
+
+        #endregion
     }
 }

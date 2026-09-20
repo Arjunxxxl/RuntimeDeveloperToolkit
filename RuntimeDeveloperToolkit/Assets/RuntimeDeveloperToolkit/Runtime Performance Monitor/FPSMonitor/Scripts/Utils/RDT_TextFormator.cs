@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class RDT_TextFormator : MonoBehaviour
+public static class RDT_TextFormator
 {
     public static string GetFormatedString(int value)
     {
