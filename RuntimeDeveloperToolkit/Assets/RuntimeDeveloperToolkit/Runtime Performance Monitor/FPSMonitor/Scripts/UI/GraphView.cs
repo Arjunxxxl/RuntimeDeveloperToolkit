@@ -10,8 +10,18 @@ namespace RuntimePerformanceMonitor
         public TMP_Text maxValTxt;
         public TMP_Text midValTxt;
 
-        private float minValueMul = 0.75f;
-        private float maxValueMul = 1.25f;
+        private float graphNextUpdateTime = 0.0f;
+        private float graphUpdateDelay = 0.0f;
+
+        private readonly float minValueMul = 0.75f;
+        private readonly float maxValueMul = 1.25f;
+        private readonly float graphUpdateDelayOffset = 0.75f;
+
+        internal void SetUp(float fpsCalcDelay)
+        {
+            graphUpdateDelay = fpsCalcDelay + graphUpdateDelayOffset;
+            graphNextUpdateTime = Time.unscaledTime + graphUpdateDelay;
+        }
         
         internal void UpdateGraph(FPSSnapshot[] snapshotHistory,
             FPSStats fpsStats,
@@ -23,6 +33,11 @@ namespace RuntimePerformanceMonitor
             int decimalPt,
             string suffix)
         {
+            if (Time.unscaledTime < graphNextUpdateTime)
+            {
+                return;
+            }
+            
             float minVal = 0;
             float maxVal = 0;
             if (showFPS)
@@ -40,6 +55,8 @@ namespace RuntimePerformanceMonitor
             maxValTxt.text = (minVal * maxValueMul).ToString("N" + decimalPt) + suffix;
             midValTxt.text = ((minVal * minValueMul) + (((maxVal * maxValueMul) - (minVal * minValueMul)) / 2.0f)).ToString("N" + decimalPt) + suffix;
             graph.SetData(snapshotHistory, historySize, writeIndex, snapshotCount, showFPS, showFrameTime, minVal * minValueMul, maxVal * maxValueMul);
+            
+            graphNextUpdateTime = Time.unscaledTime + graphUpdateDelay;
         }
     }
 }

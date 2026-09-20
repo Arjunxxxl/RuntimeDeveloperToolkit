@@ -103,5 +103,7 @@ namespace RuntimePerformanceMonitor
                 return (curFPSSnapshot, true);
             }
         }
+        
+        internal float GetFpsCalcDelay() => fpsCalcDelay;
     }
 }

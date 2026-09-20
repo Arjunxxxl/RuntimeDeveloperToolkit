@@ -66,7 +66,7 @@ namespace RuntimePerformanceMonitor
         
         #region SetUp
 
-        internal void SetUp()
+        internal void SetUp(float fpsCalcDelay)
         {
             fpsView = GetComponentInChildren<FPSView>();
             renderingInfoView = GetComponentInChildren<RenderingInfoView>();
@@ -84,6 +84,9 @@ namespace RuntimePerformanceMonitor
             
             isVisible = true;
             SetVisibility();
+            
+            fpsGraph.SetUp(fpsCalcDelay);
+            frameTimeGraph.SetUp(fpsCalcDelay);
             
             OnClickTab?.Invoke(MonitorTabs.Graph);
         }

@@ -36,9 +36,12 @@ namespace RuntimePerformanceMonitor
         {
             MonitorRunning = false;
 
+            fpsCalculator.SetUp(fpsRate);
+            float fpsCalcDelay = fpsCalculator.GetFpsCalcDelay();
+            
             systemStatsCalculator.SetUp();
             appStatsCalculator.SetUp();
-            performanceMonitorCanvas.SetUp();
+            performanceMonitorCanvas.SetUp(fpsCalcDelay);
             StartCoroutine(StartFpsMonitor());
         }
 
@@ -46,7 +49,6 @@ namespace RuntimePerformanceMonitor
         {
             yield return new WaitForSecondsRealtime(StartDelay);
             
-            fpsCalculator.SetUp(fpsRate);
             fpsHistory.SetUp(HistorySize);
             renderingInfoCalculator.SetUp();
             
