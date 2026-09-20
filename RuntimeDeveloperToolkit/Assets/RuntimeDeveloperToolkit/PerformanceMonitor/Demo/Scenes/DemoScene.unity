@@ -638,6 +638,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1857617726248594313, guid: 06d87acb9259d754e8010aaa6eff64dc, type: 3}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1857617726248594313, guid: 06d87acb9259d754e8010aaa6eff64dc, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1857617726248594313, guid: 06d87acb9259d754e8010aaa6eff64dc, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1857617726248594313, guid: 06d87acb9259d754e8010aaa6eff64dc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1857617726248594313, guid: 06d87acb9259d754e8010aaa6eff64dc, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 1929201535683138796, guid: 06d87acb9259d754e8010aaa6eff64dc, type: 3}
       propertyPath: m_Name
       value: 'Prefab - [FPSMonitor]'
