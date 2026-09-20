@@ -51,11 +51,11 @@ namespace RuntimePerformanceMonitor
             }
             else if (appStats.vSyncCount == 1)
             {
-                vSyncCountTxt.text = "VSync every frame";
+                vSyncCountTxt.text = "VSync every V bank";
             }
             else if (appStats.vSyncCount == 2)
             {
-                vSyncCountTxt.text = "VSync every 2 frames";
+                vSyncCountTxt.text = "VSync every 2 V bank";
             }
         }
     }
