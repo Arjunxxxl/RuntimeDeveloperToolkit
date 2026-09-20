@@ -35,7 +35,7 @@ namespace RuntimePerformanceMonitor
         internal void UpdateText(FPSSnapshot fpsSnapshot, FPSStats fpsStats)
         {
             fpsText.text = fpsSnapshot.FPS.ToString("N1");
-            frameTimeText.text = fpsSnapshot.FrameTime.ToString("N3") + MSStr;
+            frameTimeText.text = (fpsSnapshot.FrameTime * 1000f).ToString("N3") + MSStr;
             
             averageFpsText.text = fpsStats.AverageFps.ToString("N1");
             maxFpsText.text = fpsStats.MaxFps.ToString("N1");

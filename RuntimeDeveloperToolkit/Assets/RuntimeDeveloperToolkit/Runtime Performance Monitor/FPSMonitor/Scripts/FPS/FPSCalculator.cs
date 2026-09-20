@@ -15,14 +15,11 @@ namespace RuntimePerformanceMonitor
         private float accumulatedFrameTime;
         private int accumulatedFrames;
         
-        private float LastCaptureTime;
-        
         internal void SetUp(FPSRate fpsCalcRate)
         {
             curFpsCalcRate = fpsCalcRate;
             accumulatedFrameTime = 0.0f;
             accumulatedFrames = 0;
-            LastCaptureTime = Time.unscaledTime;
 
             curFPSSnapshot = new FPSSnapshot();
             curFPSSnapshot.FPS = 0.0f;
@@ -33,20 +30,25 @@ namespace RuntimePerformanceMonitor
                 case FPSRate.EveryFrame:
                     fpsCalcDelay = -1.0f;
                     break;
+                
                 case FPSRate.Hz_1:
-                    fpsCalcDelay = 1.0f / 60.0f;
+                    fpsCalcDelay = 1.0f;
                     break;
+
                 case FPSRate.Hz_5:
-                    fpsCalcDelay = 5.0f / 60.0f;
+                    fpsCalcDelay = 1.0f / 5.0f;
                     break;
+
                 case FPSRate.Hz_10:
-                    fpsCalcDelay = 10.0f / 60.0f;
+                    fpsCalcDelay = 1.0f / 10.0f;
                     break;
+
                 case FPSRate.Hz_25:
-                    fpsCalcDelay = 25.0f / 60.0f;
+                    fpsCalcDelay = 1.0f / 25.0f;
                     break;
+
                 case FPSRate.Hz_60:
-                    fpsCalcDelay = 60.0f / 60.0f;
+                    fpsCalcDelay = 1.0f / 60.0f;
                     break;
             }
         }
@@ -74,37 +76,31 @@ namespace RuntimePerformanceMonitor
             }
             else
             {
-                if (Time.unscaledTime > (LastCaptureTime + fpsCalcDelay))
-                {
-                    if (accumulatedFrameTime == 0.0f || accumulatedFrames == 0)
-                    {
-                        return (curFPSSnapshot, false);
-                    }
-                    
-                    float fps = accumulatedFrames / accumulatedFrameTime;
-                    float frameTime = accumulatedFrameTime / accumulatedFrames;
-                    
-                    FPSSnapshot fpsSnapshot = new FPSSnapshot
-                    {
-                        FPS = fps,
-                        FrameTime = frameTime
-                    };
-                    
-                    accumulatedFrameTime = 0.0f;
-                    accumulatedFrames = 0;
-                    LastCaptureTime = Time.unscaledTime;
-                    
-                    curFPSSnapshot = fpsSnapshot;
-                    return (curFPSSnapshot, true);
-                }
-                else
-                {
-                    float frameTime = deltaTime;
-                    accumulatedFrameTime += frameTime;
-                    accumulatedFrames++;
+                float frameTime = deltaTime;
+                accumulatedFrameTime += frameTime;
+                accumulatedFrames++;
 
+                if (accumulatedFrameTime < fpsCalcDelay)
+                {
                     return (curFPSSnapshot, false);
                 }
+                
+                if (accumulatedFrameTime == 0.0f || accumulatedFrames == 0)
+                {
+                    return (curFPSSnapshot, false);
+                }
+                    
+                FPSSnapshot fpsSnapshot = new FPSSnapshot
+                {
+                    FPS = accumulatedFrames / accumulatedFrameTime,
+                    FrameTime = accumulatedFrameTime / accumulatedFrames
+                };
+                    
+                accumulatedFrameTime = 0.0f;
+                accumulatedFrames = 0; 
+                    
+                curFPSSnapshot = fpsSnapshot;
+                return (curFPSSnapshot, true);
             }
         }
     }

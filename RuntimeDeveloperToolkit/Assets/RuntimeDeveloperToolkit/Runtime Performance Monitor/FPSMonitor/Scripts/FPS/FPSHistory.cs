@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RuntimePerformanceMonitor
@@ -8,7 +9,8 @@ namespace RuntimePerformanceMonitor
         private FPSSnapshot[] sortedFpsSnapshotHistory;
           
         private int historySize;
-        private int curSnapshotCount = 0;
+        private int writeIndex = 0;
+        private int snapshotCount = 0;
         
         // FPS Stats Data
         private FPSStats curFpsStats;
@@ -20,7 +22,8 @@ namespace RuntimePerformanceMonitor
             historySize = _historySize;
             fpsSnapshotHistory = new FPSSnapshot[_historySize];
             sortedFpsSnapshotHistory = new FPSSnapshot[_historySize];
-            curSnapshotCount = 0;
+            writeIndex = 0;
+            snapshotCount = 0;
         }
 
         #endregion
@@ -29,38 +32,22 @@ namespace RuntimePerformanceMonitor
 
         internal FPSStats AddFPSSnapshot(FPSSnapshot fpsSnapshot)
         {
-            if (curSnapshotCount < historySize)
+            fpsSnapshotHistory[writeIndex] = fpsSnapshot;
+            writeIndex++;
+
+            if (writeIndex >= historySize)
             {
-                fpsSnapshotHistory[curSnapshotCount] = fpsSnapshot;
-                curSnapshotCount++;
+                writeIndex = 0;
             }
-            else
+
+            if (snapshotCount < historySize)
             {
-                for (int idx = 0; idx < fpsSnapshotHistory.Length - 1; idx++)
-                {
-                    fpsSnapshotHistory[idx] = fpsSnapshotHistory[idx + 1];
-                }
-                fpsSnapshotHistory[historySize - 1] = fpsSnapshot;
+                snapshotCount++;
             }
-            
-            SortFPSSnapShotHistory();
+
             CalcFpsStats();
-            
+
             return curFpsStats;
-        }
-
-        private void SortFPSSnapShotHistory()
-        {
-            int totalSnapShots = curSnapshotCount;
-
-            System.Array.Copy(
-                fpsSnapshotHistory,
-                sortedFpsSnapshotHistory,
-                totalSnapShots
-            );
-            
-            sortedFpsSnapshotHistory = RDT_Sort.Sort(sortedFpsSnapshotHistory, 0, totalSnapShots - 1);
-            
         }
 
         #endregion
@@ -69,7 +56,7 @@ namespace RuntimePerformanceMonitor
 
         private void CalcFpsStats()
         {
-            if (curSnapshotCount == 0)
+            if (snapshotCount == 0)
             {
                 return;
             }
@@ -80,11 +67,17 @@ namespace RuntimePerformanceMonitor
             float maxFrameTime = float.MinValue;
             float totalFrameTime = 0;
             
-            int totalSnapShots = curSnapshotCount;
+            int totalSnapShots = snapshotCount;
+            sortedFpsSnapshotHistory = new FPSSnapshot[totalSnapShots];
             
             for (int idx = 0; idx < totalSnapShots; idx++)
             {
-                FPSSnapshot fpsSnapshot = fpsSnapshotHistory[idx];
+                int index = (writeIndex - totalSnapShots + idx + historySize)
+                            % historySize;
+                
+                FPSSnapshot fpsSnapshot = fpsSnapshotHistory[index];
+                sortedFpsSnapshotHistory[idx] = fpsSnapshot;
+                
                 totalFrameTime += fpsSnapshot.FrameTime;
 
                 if (fpsSnapshot.FPS < minFps)
@@ -108,10 +101,22 @@ namespace RuntimePerformanceMonitor
                 }
             }
             
-            float averageFPS = totalSnapShots / totalFrameTime;
+            float averageFPS = totalFrameTime > 0f ? totalSnapShots / totalFrameTime : 0f;
             
-            int countLow1Per = Mathf.CeilToInt(totalSnapShots * 0.01f);
-            int countLow10Per = Mathf.CeilToInt(totalSnapShots * 0.1f);
+            System.Array.Sort(
+                sortedFpsSnapshotHistory,
+                0,
+                totalSnapShots,
+                Comparer<FPSSnapshot>.Create(
+                    (a, b) => b.FrameTime.CompareTo(a.FrameTime)
+                )
+            );
+            
+            int countLow1Per = Mathf.Max(1, Mathf.CeilToInt(totalSnapShots * 0.01f));
+            int countLow10Per = Mathf.Max(1, Mathf.CeilToInt(totalSnapShots * 0.10f));
+
+            countLow1Per = Mathf.Min(countLow1Per, totalSnapShots);
+            countLow10Per = Mathf.Min(countLow10Per, totalSnapShots);
             
             float averageFrameTimeLow1Per = 0.0f;
             float averageFrameTimeLow10Per = 0.0f;
@@ -128,8 +133,8 @@ namespace RuntimePerformanceMonitor
                 }
             }
             
-            float averageFPSLow1Per = countLow1Per / averageFrameTimeLow1Per;
-            float averageFPSLow10Per = countLow10Per / averageFrameTimeLow10Per;
+            float averageFPSLow1Per = averageFrameTimeLow1Per > 0f ? countLow1Per / averageFrameTimeLow1Per : 0f;
+            float averageFPSLow10Per = averageFrameTimeLow10Per > 0f ? countLow10Per / averageFrameTimeLow10Per : 0f;
 
             curFpsStats.AverageFps = averageFPS;
             curFpsStats.MaxFps = maxFps;
@@ -146,6 +151,9 @@ namespace RuntimePerformanceMonitor
 
         internal FPSStats GetFPSStats() => curFpsStats;
         internal FPSSnapshot[] GetFPSSnapShotHistory() => fpsSnapshotHistory;
+        internal int GetHistorySize() => historySize;
+        internal int GetWriteIndex() => writeIndex;
+        internal int GetSnapshotCount() => snapshotCount;
 
         #endregion
     }

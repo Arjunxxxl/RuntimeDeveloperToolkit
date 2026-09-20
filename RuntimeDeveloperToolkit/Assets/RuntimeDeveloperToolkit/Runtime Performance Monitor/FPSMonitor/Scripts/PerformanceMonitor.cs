@@ -82,14 +82,10 @@ namespace RuntimePerformanceMonitor
                 performanceMonitorCanvas.UpdateFpsView(fpsSnapshot, fpsStats);
 
                 FPSSnapshot[] history = fpsHistory.GetFPSSnapShotHistory();
-                float[] fpsDataPts = new float[history.Length];
-                float[] frameTimeDataPts = new float[history.Length];
-                for (int idx = 0; idx < history.Length; idx++)
-                {
-                    fpsDataPts[idx] = history[idx].FPS;
-                    frameTimeDataPts[idx] = history[idx].FrameTime;
-                }
-                performanceMonitorCanvas.UpdateGraph(fpsDataPts, frameTimeDataPts, fpsStats);
+                int historySize = fpsHistory.GetHistorySize();
+                int writeIndex = fpsHistory.GetWriteIndex();
+                int snapshotCount = fpsHistory.GetSnapshotCount();
+                performanceMonitorCanvas.UpdateGraph(history, fpsStats, historySize, writeIndex, snapshotCount);
             }
         }
 

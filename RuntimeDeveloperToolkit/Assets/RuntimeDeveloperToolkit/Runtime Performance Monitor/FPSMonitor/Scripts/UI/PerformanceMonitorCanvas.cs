@@ -194,10 +194,14 @@ namespace RuntimePerformanceMonitor
         
         #region Graph
 
-        internal void UpdateGraph(float[] fpsDataPts, float[] frameTimeDataPts, FPSStats fpsStats)
+        internal void UpdateGraph(FPSSnapshot[] snapshotHistory,
+            FPSStats fpsStats,
+            int historySize,
+            int writeIndex,
+            int snapshotCount)
         {
-            fpsGraph.UpdateGraph(fpsDataPts, fpsStats.MinFps, fpsStats.MaxFps, 0, "");
-            frameTimeGraph.UpdateGraph(frameTimeDataPts, fpsStats.MinFrameTime, fpsStats.MaxFrameTime, 4, "\nms");
+            fpsGraph.UpdateGraph(snapshotHistory, fpsStats, historySize, writeIndex, snapshotCount, true, false, 0, "");
+            frameTimeGraph.UpdateGraph(snapshotHistory, fpsStats, historySize, writeIndex, snapshotCount, false, true, 1, " ms");
         }
 
         #endregion
