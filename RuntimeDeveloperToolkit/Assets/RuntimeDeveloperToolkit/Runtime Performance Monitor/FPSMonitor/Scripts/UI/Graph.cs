@@ -35,12 +35,15 @@ namespace RuntimePerformanceMonitor
 
             historySize = _historySize;
             writeIndex = _writeIndex;
-            snapshotCount = _snapshotCount;
+            snapshotCount = Mathf.Clamp(
+                _snapshotCount,
+                0,
+                _historySize
+            );
 
             showFPS = _showFPS;
             showFrameTime = _showFrameTime;
 
-            // Prevent invalid ranges.
             if (maxVal <= minVal)
             {
                 maxVal = minVal + 1f;
@@ -70,29 +73,36 @@ namespace RuntimePerformanceMonitor
 
             Vector2 halfSize = rect.size * 0.5f;
 
-            int sampleCount = snapshotCount;
+            // Draw across the complete history.
+            // This ensures that the graph always occupies the
+            // full width of the UI element.
+            int pointCount = historySize;
 
-            // We draw from right to left.
-            // i = 0 represents the newest sample.
-            for (int i = 0; i < sampleCount - 1; i++)
+            if (pointCount < 2)
+                return;
+
+            for (int i = 0; i < pointCount - 1; i++)
             {
-                FPSSnapshot currentSnapshot = GetSnapshotFromNewest(i);
-                FPSSnapshot previousSnapshot = GetSnapshotFromNewest(i + 1);
+                // i = 0 represents the newest point on the right.
+                // i = historySize - 1 represents the oldest point
+                // on the left.
+                //
+                // If a point has not been calculated yet, its value
+                // is replaced with the oldest available snapshot.
 
-                float currentValue = GetSnapshotValue(currentSnapshot);
-                float previousValue = GetSnapshotValue(previousSnapshot);
+                float currentValue = GetGraphValue(i);
+                float previousValue = GetGraphValue(i + 1);
 
-                // Newest sample starts at the right.
                 float x1 = Mathf.Lerp(
                     width,
                     0f,
-                    (float)i / (sampleCount - 1)
+                    (float)i / (pointCount - 1)
                 );
 
                 float x2 = Mathf.Lerp(
                     width,
                     0f,
-                    (float)(i + 1) / (sampleCount - 1)
+                    (float)(i + 1) / (pointCount - 1)
                 );
 
                 float y1 = NormalizeValue(currentValue) * height;
@@ -114,18 +124,42 @@ namespace RuntimePerformanceMonitor
 
         #endregion
 
-        #region Snapshot Data
+        #region Graph Data
+
+        private float GetGraphValue(int offsetFromNewest)
+        {
+            // No samples have been calculated yet.
+            // Keep the entire graph at the minimum value.
+            if (snapshotCount <= 0)
+            {
+                return minValue;
+            }
+
+            // Uncalculated points stay flat at the minimum value.
+            if (offsetFromNewest >= snapshotCount)
+            {
+                return minValue;
+            }
+
+            FPSSnapshot snapshot = GetSnapshotFromNewest(offsetFromNewest);
+
+            return GetSnapshotValue(snapshot);
+        }
 
         private FPSSnapshot GetSnapshotFromNewest(int offset)
         {
-            // writeIndex points to the next position that will be written.
+            // writeIndex points to the next position to be written.
             //
             // writeIndex - 1 = newest snapshot
             // writeIndex - 2 = second newest snapshot
             //
-            // Wrap the index around the circular buffer.
+            // offset is clamped by GetGraphValue(), so it never
+            // accesses an uncalculated snapshot.
 
             int index = writeIndex - 1 - offset;
+
+            // Handle circular buffer wrapping.
+            index %= historySize;
 
             if (index < 0)
             {
@@ -144,10 +178,11 @@ namespace RuntimePerformanceMonitor
 
             if (showFrameTime && !showFPS)
             {
+                // FrameTime is stored in seconds.
+                // Convert to milliseconds for the graph.
                 return snapshot.FrameTime * 1000f;
             }
 
-            // Invalid or ambiguous selection.
             return 0f;
         }
 
@@ -159,7 +194,11 @@ namespace RuntimePerformanceMonitor
             }
 
             return Mathf.Clamp01(
-                Mathf.InverseLerp(minValue, maxValue, value)
+                Mathf.InverseLerp(
+                    minValue,
+                    maxValue,
+                    value
+                )
             );
         }
 
@@ -172,10 +211,10 @@ namespace RuntimePerformanceMonitor
             if (values == null)
                 return false;
 
-            if (historySize <= 0)
+            if (historySize < 2)
                 return false;
 
-            if (snapshotCount < 2)
+            if (snapshotCount <= 0)
                 return false;
 
             if (snapshotCount > historySize)
@@ -205,7 +244,6 @@ namespace RuntimePerformanceMonitor
         {
             Vector2 direction = end - start;
 
-            // Avoid invalid normalization when both points overlap.
             if (direction.sqrMagnitude < 0.000001f)
             {
                 direction = Vector2.right;
@@ -237,8 +275,17 @@ namespace RuntimePerformanceMonitor
             vertex.position = end + normal;
             vh.AddVert(vertex);
 
-            vh.AddTriangle(index, index + 1, index + 2);
-            vh.AddTriangle(index, index + 2, index + 3);
+            vh.AddTriangle(
+                index,
+                index + 1,
+                index + 2
+            );
+
+            vh.AddTriangle(
+                index,
+                index + 2,
+                index + 3
+            );
         }
 
         #endregion
